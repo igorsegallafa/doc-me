@@ -12,11 +12,24 @@ defmodule DocmeWeb.DocumentChannel do
   end
 
   @impl true
+  def terminate(reason, socket) do
+    broadcast_from!(socket, "userDisconnected", %{name: "Disconnect"})
+  end
+
+  @impl true
   def handle_info(:after_join, socket) do
     response = Document.get_document(socket.assigns.document_id)
+    broadcast_from!(socket, "userJoined", %{name: "User1"})
     push(socket, "open", response)
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_in("update_cursor", message, socket) do
+    broadcast_from!(socket, "updateCursor", message)
+
+    {:reply, :ok, socket}
   end
 
   @impl true
@@ -30,6 +43,7 @@ defmodule DocmeWeb.DocumentChannel do
   defp broadcast_document_changes(response, socket) do
     broadcast_from!(socket, "update", response)
     push(socket, "updateVersion", response)
+
     {:reply, :ok, socket}
   end
 end

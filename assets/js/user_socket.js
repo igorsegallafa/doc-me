@@ -34,34 +34,19 @@ documentChannel.join()
     .receive("error", resp => {})
 
 // Messages handler
-documentChannel.on("update",        updateDocumentHandler)
-documentChannel.on("updateVersion", updateVersionHandler)
-documentChannel.on("open",          openDocumentHandler)
+documentChannel.on("update",            updateDocumentHandler)
+documentChannel.on("updateVersion",     updateVersionHandler)
+documentChannel.on("open",              openDocumentHandler)
+documentChannel.on("userJoined",        userJoinedHandler)
+documentChannel.on("userDisconnected",  userDisconnected)
+documentChannel.on("updateCursor",      updateCursor)
 
 function selectionChangeHandler(range, oldRange, source) {
-    if (source === 'user') {
-        updateCursor(range);
-    } else {
-        debounce(updateCursor, 500);
-    }
+    documentChannel.push("update_cursor", range);
 }
 
-function updateCursor(range) {
-    // Use a timeout to simulate a high latency connection.
-    setTimeout(() => cursorsOne.moveCursor('cursor', range), 1000);
-}
-
-function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        const context = this;
-        const later = function() {
-            timeout = null;
-            func.apply(context, args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+function updateCursor(data) {
+    cursorsOne.moveCursor('cursor', data);
 }
 
 function textChangeHandler(delta) {
@@ -86,6 +71,14 @@ function updateDocumentHandler(data) {
 
 function updateVersionHandler(data) {
     documentVersion = data.version;
+}
+
+function userJoinedHandler(data) {
+    console.log(data);
+}
+
+function userDisconnected(data) {
+    console.log(data);
 }
 
 export default socket
