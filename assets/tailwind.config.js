@@ -7,7 +7,7 @@ module.exports = {
     '../lib/*_web/**/*.*ex',
     './node_modules/flowbite/**/*.js'
   ],
-  darkMode: 'media',
+  darkMode: 'class',
   theme: {
     maxWidth: {
       '8xl': '90rem',

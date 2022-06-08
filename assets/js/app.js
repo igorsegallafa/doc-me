@@ -24,3 +24,33 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+window.onload = function() {
+    updateTheme();
+
+    let dropdownThemeItems = document.getElementsByClassName('dropdownThemeItem');
+    Array.from(dropdownThemeItems).forEach((element) => {
+        element.addEventListener('click', (event) => {
+            if (event.target.innerText.includes("Dark")) {
+                localStorage.theme = 'dark';
+            }
+            else if (event.target.innerText.includes("Light")) {
+                localStorage.theme = 'light';
+            }
+            else {
+                localStorage.removeItem('theme')
+            }
+
+            updateTheme();
+        });
+    });
+}
+
+let updateTheme = function() {
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+}

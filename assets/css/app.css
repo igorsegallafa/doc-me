@@ -3,7 +3,7 @@
 @import "tailwindcss/utilities";
 
 .ql-container {
-  @apply overflow-visible dark:text-white !important;
+  @apply overflow-visible min-h-full dark:text-white !important;
 }
 
 .ql-container h1 {
@@ -15,7 +15,7 @@
 }
 
 .ql-container p {
-  @apply text-base text-slate-400 pt-2 first:pt-0 !important;
+  @apply text-base dark:text-slate-400 pt-2 first:pt-0 !important;
 }
 
 .ql-container blockquote {
