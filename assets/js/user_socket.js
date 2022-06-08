@@ -21,8 +21,6 @@ cursorsOne.createCursor('cursor', 'User 1', 'blue');
 quill.on('text-change', textChangeHandler);
 quill.on('selection-change', selectionChangeHandler);
 
-textChangeHandler();
-
 // Open Socket
 const urlParams = window.location.href.split('/');
 const documentId = urlParams[urlParams.findIndex(element => element === "document") + 1];
@@ -39,21 +37,9 @@ documentChannel.on("update", handleDocumentUpdate)
 documentChannel.on("open",   handleDocumentOpened)
 
 function selectionChangeHandler(range, oldRange, source) {
-    console.log(source);
     if (source === 'user') {
-        // If the user has manually updated their selection, send this change
-        // immediately, because a user update is important, and should be
-        // sent as soon as possible for a smooth experience.
         updateCursor(range);
     } else {
-        // Otherwise, it's a text change update or similar. These changes will
-        // automatically get transformed by the receiving client without latency.
-        // If we try to keep sending updates, then this will undo the low-latency
-        // transformation already performed, which we don't want to do. Instead,
-        // add a debounce so that we only send the update once the user has stopped
-        // typing, which ensures we send the most up-to-date position (which should
-        // hopefully match what the receiving client already thinks is the cursor
-        // position anyway).
         debounce(updateCursor, 500);
     }
 }
