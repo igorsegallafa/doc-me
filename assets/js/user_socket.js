@@ -25,6 +25,7 @@ quill.on('selection-change', selectionChangeHandler);
 const urlParams = window.location.href.split('/');
 const documentId = urlParams[urlParams.findIndex(element => element === "document") + 1];
 
+let documentVersion = 0;
 let documentChannel = socket.channel("document:" + documentId, {})
 
 // Join handler
@@ -33,8 +34,9 @@ documentChannel.join()
     .receive("error", resp => {})
 
 // Messages handler
-documentChannel.on("update", handleDocumentUpdate)
-documentChannel.on("open",   handleDocumentOpened)
+documentChannel.on("update",        updateDocumentHandler)
+documentChannel.on("updateVersion", updateVersionHandler)
+documentChannel.on("open",          openDocumentHandler)
 
 function selectionChangeHandler(range, oldRange, source) {
     if (source === 'user') {
@@ -64,16 +66,26 @@ function debounce(func, wait) {
 
 function textChangeHandler(delta) {
     if (delta) {
-        documentChannel.push("update", delta);
+        let message = {
+            delta,
+            version: documentVersion
+        }
+
+        documentChannel.push("update", message);
     }
 }
 
-function handleDocumentOpened(data) {
-    quill.setContents(data.contents, "silent");
+function openDocumentHandler(data) {
+    documentVersion = data.version;
+    quill.setContents(data.content, "silent");
 }
 
-function handleDocumentUpdate(data) {
+function updateDocumentHandler(data) {
     quill.updateContents(data, "silent");
+}
+
+function updateVersionHandler(data) {
+    documentVersion = data.version;
 }
 
 export default socket
