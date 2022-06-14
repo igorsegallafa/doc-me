@@ -51,15 +51,15 @@ function updateVersionHandler(data) {
 }
 
 function userJoinedHandler(data) {
-    console.log(data);
+    Editor.createCursor(data.id);
 }
 
 function userDisconnectedHandler(data) {
-    console.log(data);
+    Editor.destroyCursor(data.id);
 }
 
 function updateCursorHandler(data) {
-    Editor.updateCursor(data);
+    Editor.updateCursor(data.id, data);
 }
 
 export const Document = {

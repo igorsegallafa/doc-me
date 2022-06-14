@@ -5,7 +5,11 @@ defmodule DocmeWeb.DocumentChannel do
   def join("document:" <> document_id, params, socket) do
     {:ok, _pid} = Document.open(document_id)
 
-    socket = assign(socket, :document_id, document_id)
+    socket =
+      socket
+      |> assign(:document_id, document_id)
+      |> assign(:user_id, Integer.to_string(:rand.uniform(4294967296), 32) <> Integer.to_string(:rand.uniform(4294967296), 32))
+
     send(self(), :after_join)
 
     {:ok, socket}
@@ -13,13 +17,14 @@ defmodule DocmeWeb.DocumentChannel do
 
   @impl true
   def terminate(reason, socket) do
-    broadcast_from!(socket, "userDisconnected", %{name: "Disconnect"})
+    broadcast_from!(socket, "userDisconnected", %{id: socket.assigns.user_id})
   end
 
   @impl true
   def handle_info(:after_join, socket) do
     response = Document.get_document(socket.assigns.document_id)
-    broadcast_from!(socket, "userJoined", %{name: "User1"})
+    broadcast_from!(socket, "userJoined", %{id: socket.assigns.user_id})
+
     push(socket, "open", response)
 
     {:noreply, socket}
@@ -27,7 +32,7 @@ defmodule DocmeWeb.DocumentChannel do
 
   @impl true
   def handle_in("update_cursor", message, socket) do
-    broadcast_from!(socket, "updateCursor", message)
+    broadcast_from!(socket, "updateCursor", message |> Map.merge(%{"id" => socket.assigns.user_id}))
 
     {:reply, :ok, socket}
   end
