@@ -27,7 +27,7 @@ function updateTheme() {
     }
 }
 
-export var Theme = {
+export const Theme = {
     init: function() {
         setupTheme();
     }

@@ -3,18 +3,16 @@ import Quill from "quill";
 
 import {Document} from "./document";
 
-let editor = null;
 let cursorsOne = null;
 
 function setupEditor() {
     Quill.register('modules/cursors', QuillCursors);
-    editor = new Quill('#editor', Editor.config);
 
-    cursorsOne = editor.getModule('cursors');
+    cursorsOne = Editor.getEditor().getModule('cursors');
     cursorsOne.createCursor('cursor', 'User 1', 'blue');
 
-    editor.on('text-change', textChangeHandler);
-    editor.on('selection-change', selectionChangeHandler);
+    Editor.getEditor().on('text-change', textChangeHandler);
+    Editor.getEditor().on('selection-change', selectionChangeHandler);
 }
 
 function selectionChangeHandler(range, oldRange, source) {
@@ -26,18 +24,19 @@ function textChangeHandler(delta) {
 }
 
 function setContent(content) {
-    editor.setContents(content, "silent");
+    Editor.getEditor().setContents(content, "silent");
 }
 
 function setContentChanges(changes) {
-    editor.updateContents(changes, "silent");
+    Editor.getEditor().updateContents(changes, "silent");
 }
 
 function updateCursor(range) {
     cursorsOne.moveCursor('cursor', range);
 }
 
-export var Editor = {
+export const Editor = {
+    editor: null,
     config: {
         theme: 'bubble',
         modules: {
@@ -46,10 +45,18 @@ export var Editor = {
             }
         }
     },
+
     setContent,
     setContentChanges,
     updateCursor,
+
     init: function() {
         setupEditor();
     },
+    getEditor: function() {
+        if (Editor.editor == null)
+            Editor.editor = new Quill('#editor', Editor.config);
+
+        return Editor.editor;
+    }
 };
