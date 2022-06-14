@@ -16,14 +16,41 @@ function selectionChangeHandler(range, oldRange, source) {
 
 function textChangeHandler(delta) {
     Document.sendUpdateDocumentChange(delta);
+    buildSectionMenu();
 }
 
 function setContent(content) {
     Editor.getEditor().setContents(content, "silent");
+    buildSectionMenu();
 }
 
 function setContentChanges(changes) {
     Editor.getEditor().updateContents(changes, "silent");
+    buildSectionMenu();
+}
+
+function buildSectionMenu() {
+    const sections = document.getElementById("editor").querySelectorAll("h2");
+
+    let sectionsMenu = document.getElementById("sections");
+    let ul = document.createElement("ul");
+
+    sectionsMenu.innerHTML = "";
+    sectionsMenu.appendChild(ul);
+
+    sections.forEach(function(section, i) {
+        section.id = "section" + i;
+
+        let li = document.createElement("li");
+        li.className = "py-2 transition-colors duration-200 relative block hover:text-gray-900 text-gray-500 dark:text-gray-400 dark:hover:text-white";
+
+        let a = document.createElement("a");
+        a.innerHTML = section.innerText;
+        a.href = "#section" + i;
+
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
 }
 
 function createCursor(userId) {
