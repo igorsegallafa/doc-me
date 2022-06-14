@@ -42,7 +42,7 @@ function buildSectionMenu() {
         section.id = "section" + i;
 
         let li = document.createElement("li");
-        li.className = "py-2 transition-colors duration-200 relative block hover:text-gray-900 text-gray-500 dark:text-gray-400 dark:hover:text-white";
+        li.className = "section-item";
 
         let a = document.createElement("a");
         a.innerHTML = section.innerText;
