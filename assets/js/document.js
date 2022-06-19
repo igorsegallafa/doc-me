@@ -2,11 +2,8 @@ import QuillCursors from "quill-cursors";
 import {Editor} from "./editor";
 
 function setupDocumentChannel(socket) {
-    const urlParams = window.location.href.split('/');
-    const documentId = urlParams[urlParams.findIndex(element => element === "document") + 1];
-
     // Connect document channel
-    Document.setDocumentChannel(socket.channel("document:" + documentId.substr(0, documentId.indexOf("#")), {}));
+    Document.setDocumentChannel(socket.channel("document:" + documentId, {}));
 
     // Join handler
     Document.getDocumentChannel().join()
