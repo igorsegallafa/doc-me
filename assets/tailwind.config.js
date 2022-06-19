@@ -9,10 +9,11 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
-    maxWidth: {
-      '8xl': '90rem',
+    extend: {
+      maxWidth: {
+        '8xl': '90rem',
+      },
     },
-    extend: {},
   },
   plugins: [
     require('@tailwindcss/forms'),

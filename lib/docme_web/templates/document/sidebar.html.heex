@@ -37,7 +37,7 @@
                     </ul>
                 </li>
                 <li class="mt-4 first:mt-8">
-                    <button data-tooltip-target="tooltip-section" type="button" class="cursor-pointer py-0.5 px-2 bg-gray-100 text-gray-800 rounded dark:bg-gray-800 dark:text-gray-300 group">
+                    <button data-modal-toggle="section-modal" data-tooltip-target="tooltip-section" type="button" class="cursor-pointer py-0.5 px-2 bg-gray-100 text-gray-800 rounded dark:bg-gray-800 dark:text-gray-300 group">
                         . . .
                     </button>
                 </li>
@@ -51,3 +51,4 @@
         </nav>
     </div>
 </aside>
+<%= render DocmeWeb.DocumentView, "new_section.html", assigns %>
