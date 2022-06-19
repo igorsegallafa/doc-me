@@ -1,9 +1,13 @@
 import QuillCursors from "quill-cursors";
 import Quill from "quill";
 
+import hljs from "highlight.js";
+import elixir from "highlight.js/lib/languages/elixir";
+
 import {Document} from "./document";
 
 function setupEditor() {
+    hljs.registerLanguage('elixir', elixir);
     Quill.register('modules/cursors', QuillCursors);
 
     Editor.getEditor().on('text-change', textChangeHandler);
@@ -90,6 +94,8 @@ export const Editor = {
     config: {
         theme: 'bubble',
         modules: {
+            syntax: {highlight: text => hljs.highlightAuto(text).value},
+            toolbar: [{'header': 2}, 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'clean'],
             cursors: {
                 hideDelayMs: 500,
                 transformOnTextChange: true,
