@@ -1,5 +1,8 @@
+import "../css/app.css";
+
 import "phoenix_html";
 import "flowbite";
+import "quill";
 import $ from "jquery";
 
 import {Socket} from "phoenix";

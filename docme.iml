@@ -99,5 +99,7 @@
     <orderEntry type="library" name="credo" level="project" />
     <orderEntry type="library" name="elixir_make" level="project" />
     <orderEntry type="library" name="dart_sass" level="project" />
+    <orderEntry type="library" name="circular_buffer" level="project" />
+    <orderEntry type="library" name="castore" level="project" />
   </component>
 </module>

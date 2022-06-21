@@ -2,10 +2,11 @@
 // https://tailwindcss.com/docs/configuration
 module.exports = {
   content: [
-    './js/**/*.js',
-    '../lib/*_web.ex',
-    '../lib/*_web/**/*.*ex',
-    './node_modules/flowbite/**/*.js'
+    "./js/**/*.js",
+    "../lib/**/*.ex",
+    "../lib/**/*.leex",
+    "../lib/**/*.heex",
+    "../lib/**/*.eex",
   ],
   darkMode: 'class',
   theme: {

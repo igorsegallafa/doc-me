@@ -15,9 +15,7 @@ config :docme, DocmeWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "CPG45XTe61AZoBa/p/IjB8xxElHnLv3WBKy+8jhl5bXwjoL7x1wldyxBU7NNk82E",
   watchers: [
-    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    node: ["node_modules/webpack/bin/webpack.js", "--mode=development", "--watch", "--watch-options-stdin", cd: Path.expand("../assets", __DIR__)]
   ]
 
 # ## SSL Support
