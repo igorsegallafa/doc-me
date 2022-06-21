@@ -1,84 +1,62 @@
-import QuillCursors from "quill-cursors";
 import {Editor} from "./editor";
 
-function setupDocumentChannel(socket) {
-    // Connect document channel
-    Document.setDocumentChannel(socket.channel("document:" + documentId, {}));
-
-    // Join handler
-    Document.getDocumentChannel().join()
-        .receive("ok", resp => {})
-        .receive("error", resp => {})
-
-    // Messages handler
-    Document.getDocumentChannel().on("open", openDocumentHandler);
-    Document.getDocumentChannel().on("update", updateDocumentHandler);
-    Document.getDocumentChannel().on("updateVersion", updateVersionHandler);
-    Document.getDocumentChannel().on("userJoined", userJoinedHandler);
-    Document.getDocumentChannel().on("userDisconnected", userDisconnectedHandler);
-    Document.getDocumentChannel().on("updateCursor", updateCursorHandler);
-}
-
-function sendUpdateCursorPosition(range) {
-    Document.getDocumentChannel().push("update_cursor", range);
-}
-
-function sendUpdateDocumentChange(delta) {
-    if (delta) {
-        let message = {
-            delta,
-            version: Document.getDocumentVersion()
-        }
-
-        Document.getDocumentChannel().push("update", message);
-    }
-}
-
-function openDocumentHandler(data) {
-    Document.setDocumentVersion(data.version);
-    Editor.setContent(data.content);
-}
-
-function updateDocumentHandler(data) {
-    Editor.setContentChanges(data);
-}
-
-function updateVersionHandler(data) {
-    Document.setDocumentVersion(data.version);
-}
-
-function userJoinedHandler(data) {
-    Editor.createCursor(data.id);
-}
-
-function userDisconnectedHandler(data) {
-    Editor.destroyCursor(data.id);
-}
-
-function updateCursorHandler(data) {
-    Editor.updateCursor(data.id, data);
-}
-
 export const Document = {
-    documentVersion: 0,
-    documentChannel: null,
+    init(socket) {
+        // Connect document channel
+        this.documentVersion = 0;
+        this.documentChannel = socket.channel("document:" + documentId, {});
 
-    sendUpdateCursorPosition,
-    sendUpdateDocumentChange,
+        // Join handler
+        this.documentChannel.join()
+            .receive("ok", _resp => {})
+            .receive("error", _resp => {})
 
-    init: function(socket) {
-        setupDocumentChannel(socket);
+        // Messages handler
+        this.documentChannel.on("open", this.openDocumentHandler);
+        this.documentChannel.on("update", this.updateDocumentHandler);
+        this.documentChannel.on("updateVersion", this.updateVersionHandler);
+        this.documentChannel.on("userJoined", this.userJoinedHandler);
+        this.documentChannel.on("userDisconnected", this.userDisconnectedHandler);
+        this.documentChannel.on("updateCursor", this.updateCursorHandler);
     },
-    setDocumentChannel: function(channel) {
-        Document.documentChannel = channel;
+
+    sendUpdateCursorPosition(range) {
+        this.documentChannel.push("update_cursor", range);
     },
-    getDocumentChannel: function() {
-        return Document.documentChannel;
+
+    sendUpdateDocumentChange(delta) {
+        if (delta) {
+            let message = {
+                delta,
+                version: this.documentVersion
+            }
+
+            this.documentChannel.push("update", message);
+        }
     },
-    setDocumentVersion: function(version) {
-        Document.documentVersion = version;
+
+    openDocumentHandler(data) {
+        this.documentVersion = data.version;
+        Editor.setContent(data.content);
     },
-    getDocumentVersion: function() {
-        return Document.documentVersion;
+
+    updateDocumentHandler(data) {
+        Editor.setContentChanges(data);
+    },
+
+    updateVersionHandler(data) {
+        this.documentVersion = data.version;
+    },
+
+    userJoinedHandler(data) {
+        Editor.createCursor(data.id);
+    },
+
+    userDisconnectedHandler(data) {
+        Editor.destroyCursor(data.id);
+    },
+
+    updateCursorHandler(data) {
+        Editor.updateCursor(data.id, data);
     }
 };
