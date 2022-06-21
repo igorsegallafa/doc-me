@@ -1,18 +1,19 @@
-# Docme
+# DocMe
 
-To start your Phoenix server:
+Documentation with real-time collaborative editor using Elixir and Phoenix. 
 
-  * Install dependencies with `mix deps.get`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## Usage
+* Install dependencies with `mix deps.get`
+* Install Node.js dependencies with `cd assets && npm install`
+* Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Demonstration
 
-## Learn more
+![alt text](https://raw.githubusercontent.com/igorsegallafa/doc-me/master/demo.png)
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## References
+
+* [Building a Real-time Collaborative Editor with Phoenix](https://speakerdeck.com/sheharyar/building-a-real-time-collaborative-editor-with-phoenix)
+* [Announcing Delta for Elixir](https://slab.com/blog/announcing-delta-for-elixir)
