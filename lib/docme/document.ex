@@ -7,11 +7,11 @@ defmodule Document do
 
     # An up-to-date Delta with all changes applied, representing
     # the current state of the document
-    contents: [],
+    contents: [%{"insert" => "\n"}],
 
     # The `inverted` versions of all changes performed on the
     # document (useful for viewing history or undo the changes)
-    changes: [],
+    changes: [%{"insert" => "\n"}],
   }
 
 
@@ -62,7 +62,7 @@ defmodule Document do
       changes: [transformed_change | state.changes],
     }
 
-    response = %{"ops" => change, version: state.version}
+    response = %{"ops" => transformed_change, version: state.version}
     {:reply, {:ok, response}, state}
   end
 

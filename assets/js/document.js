@@ -1,9 +1,10 @@
 import {Editor} from "./editor";
 
 export const Document = {
+    documentVersion: 0,
+
     init(socket) {
         // Connect document channel
-        this.documentVersion = 0;
         this.documentChannel = socket.channel("document:" + documentId, {});
 
         // Join handler
@@ -21,14 +22,19 @@ export const Document = {
     },
 
     sendUpdateCursorPosition(range) {
-        this.documentChannel.push("update_cursor", range);
+        let message = {
+            range: range,
+            version: Document.documentVersion
+        }
+
+        this.documentChannel.push("update_cursor", message);
     },
 
     sendUpdateDocumentChange(delta) {
         if (delta) {
             let message = {
                 delta,
-                version: this.documentVersion
+                version: Document.documentVersion
             }
 
             this.documentChannel.push("update", message);
@@ -36,16 +42,17 @@ export const Document = {
     },
 
     openDocumentHandler(data) {
-        this.documentVersion = data.version;
+        Document.documentVersion = data.version;
         Editor.setContent(data.content);
     },
 
     updateDocumentHandler(data) {
+        Document.documentVersion = data.version;
         Editor.setContentChanges(data);
     },
 
     updateVersionHandler(data) {
-        this.documentVersion = data.version;
+        Document.documentVersion = data.version;
     },
 
     userJoinedHandler(data) {
@@ -57,6 +64,7 @@ export const Document = {
     },
 
     updateCursorHandler(data) {
-        Editor.updateCursor(data.id, data);
+        if (Document.documentVersion >= data.version)
+            Editor.updateCursor(data.id, data.range);
     }
 };

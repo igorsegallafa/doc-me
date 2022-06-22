@@ -17,6 +17,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 
 window.jQuery = $;
 window.$ = $;
+window.liveSocket = liveSocket;
 
 liveSocket.connect();
 socket.connect();
