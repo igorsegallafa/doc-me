@@ -17,6 +17,12 @@ export const Editor = {
                 cursors: {
                     hideDelayMs: 500,
                     transformOnTextChange: true,
+                },
+                keyboard: {
+                    bindings: {
+                        'indent code-block': null,
+                        'outdent code-block': null,
+                    }
                 }
             }
         });
