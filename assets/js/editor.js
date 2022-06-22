@@ -8,6 +8,7 @@ import {Document} from "./document";
 
 export const Editor = {
     init() {
+        Quill.register('modules/cursors', QuillCursors);
         this.editor = new Quill('#editor', {
             theme: 'bubble',
             modules: {
@@ -21,7 +22,6 @@ export const Editor = {
         });
 
         hljs.registerLanguage('elixir', elixir);
-        Quill.register('modules/cursors', QuillCursors);
 
         this.editor.on('text-change', this.textChangeHandler);
         this.editor.on('selection-change', this.selectionChangeHandler);
@@ -33,17 +33,17 @@ export const Editor = {
 
     textChangeHandler(delta) {
         Document.sendUpdateDocumentChange(delta);
-        this.buildSectionMenu();
+        Editor.buildSectionMenu();
     },
 
     setContent(content) {
         this.editor.setContents(content, "silent");
-        this.buildSectionMenu();
+        Editor.buildSectionMenu();
     },
 
     setContentChanges(changes) {
         this.editor.updateContents(changes, "silent");
-        this.buildSectionMenu();
+        Editor.buildSectionMenu();
     },
 
     buildSectionMenu() {
